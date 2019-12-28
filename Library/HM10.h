@@ -19,10 +19,11 @@
 #define HM10_UART_RX_PIN_ADDRESS	0x4002C004
 #define HM10_UART_RX_PIN	*((volatile uint32_t*)(HM10_UART_RX_PIN_ADDRESS))
 
-extern uint8_t HM10WriteTo, HM10ReadFrom;
+extern uint8_t HM10WriteTo;
 extern uint8_t HM10NewDataAvailable;
 
 extern char HM10Buffer[HM10BufferSize];
+extern char NextCommand[HM10BufferSize];
 
 void HM10_Init(void);
 void HM10_SendCommand(char* command);

@@ -1,8 +1,9 @@
 #include "HM10.h"
 
-uint8_t HM10WriteTo = 0, HM10ReadFrom = 0;
+uint8_t HM10WriteTo = 0;
 uint8_t HM10NewDataAvailable = 0;
 
+char NextCommand[HM10BufferSize] = "";
 char HM10Buffer[HM10BufferSize];
 
 void HM10_Init() {	
@@ -43,7 +44,7 @@ void HM10_SendCommand(char* command) {
 }
 
 void HM10_ClearBuffer() {
-	HM10WriteTo = HM10ReadFrom = HM10NewDataAvailable = 0;
+	HM10WriteTo = 0;
 	memset(HM10Buffer, 0, HM10BufferSize);
 }
 
@@ -66,11 +67,14 @@ void HM10_Write(char* data) {
 void UART3_IRQHandler() {
 	char data;
 	data = HM10_ReadData();
-	HM10Buffer[HM10WriteTo] = data;
+	HM10Buffer[HM10WriteTo++] = data;
 	
-	if (data == 10)
-		HM10NewDataAvailable = HM10WriteTo;
-	
-	HM10WriteTo = (HM10WriteTo + 1) % HM10BufferSize;
+	if (data == 10) {
+		strncpy(NextCommand, HM10Buffer, HM10WriteTo - 2);
+		HM10NewDataAvailable = 1;
+		HM10_ClearBuffer();
+	}
 }
 
+
+// 13, 10

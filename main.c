@@ -16,6 +16,8 @@ void init() {
 	Serial_Init();
 	
 	HM10_Init();
+	HM10_SendCommand("AT+NAMEANADOL");
+	HM10_SendCommand("AT+RESET");
 }
 
 char readWhenAvailable() {
@@ -27,7 +29,7 @@ char readWhenAvailable() {
 }
 
 
-void update() {
+void update_old() {
 	unsigned uartReadBufferWriteTo = 0, HM10ResponseStart = 0, uartWriteTo = 0;
 	memset(uartReadBuffer, 0, UART_READ_BUFFER_SIZE);
 	memset(uartWriteBuffer, 0, UART_WRITE_BUFFER_SIZE);
@@ -44,16 +46,11 @@ void update() {
 	uartReadBuffer[uartReadBufferWriteTo++] = '\r';
 	uartReadBuffer[uartReadBufferWriteTo++] = '\n';
 	
-	serialNewDataAvailable = 0;
 	HM10_ClearBuffer();
 	HM10_SendCommand(uartReadBuffer);
 	
-	while (!HM10NewDataAvailable) {
-		if (serialNewDataAvailable && (serialReceivedCharacter == 13 || serialReceivedCharacter == 10)) {
-			serialNewDataAvailable = 0;
-			break;
-		}
-	}
+	while (!HM10NewDataAvailable);
+	HM10NewDataAvailable = 0;
 	
 	//uartWriteBuffer[uartWriteTo++] = '\r';
 	//uartWriteBuffer[uartWriteTo++] = '\n';
@@ -63,11 +60,17 @@ void update() {
 	while(!serialTransmitCompleted);
 }
 
+void update() {
+	while (!HM10NewDataAvailable);
+	HM10NewDataAvailable = 0;
+	HM10_SendCommand(NextCommand);
+}	
+
 int main() {
 	init();
 	
 	while(1) {
-		update();
+		update_old();
 	}
 }
 

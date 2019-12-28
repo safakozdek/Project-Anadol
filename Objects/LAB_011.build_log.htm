@@ -21,24 +21,24 @@ Target DLL:      CMSIS_AGDI.dll V1.31.18.0
 Dialog DLL:      TCM.DLL V1.36.2.0
  
 <h2>Project:</h2>
-C:\Users\safak\Desktop\11\LAB_011.uvprojx
+C:\Users\safak\Desktop\Project-Anadol\LAB_011.uvprojx
 Project File Date:  12/28/2019
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\Keil\ARM\ARMCC\Bin'
 Rebuild target 'NXP LPC4088'
 assembling startup_LPC407x_8x_177x_8x.s...
+compiling HM10.c...
 compiling Serial.c...
 compiling main.c...
-main.c(31): warning:  #177-D: variable "HM10ResponseStart"  was declared but never referenced
+main.c(33): warning:  #177-D: variable "HM10ResponseStart"  was declared but never referenced
   	unsigned uartReadBufferWriteTo = 0, HM10ResponseStart = 0, uartWriteTo = 0;
-main.c(31): warning:  #177-D: variable "uartWriteTo"  was declared but never referenced
+main.c(33): warning:  #177-D: variable "uartWriteTo"  was declared but never referenced
   	unsigned uartReadBufferWriteTo = 0, HM10ResponseStart = 0, uartWriteTo = 0;
 main.c: 2 warnings, 0 errors
-compiling HM10.c...
 compiling system_LPC407x_8x_177x_8x.c...
 linking...
-Program Size: Code=2104 RO-data=260 RW-data=28 ZI-data=2308  
+Program Size: Code=1968 RO-data=260 RW-data=28 ZI-data=1540  
 ".\Objects\LAB_011.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
@@ -66,12 +66,12 @@ Package Vendor: Keil
    * Component: ARM::CMSIS:CORE:5.2.0
 
    * Component: Keil::Device:Startup:1.0.1
-      Source file:   Device\Source\system_LPC407x_8x_177x_8x.c
-      Source file:   Device\Source\ARM\startup_LPC407x_8x_177x_8x.s
-      Include file:  Device\Include\LPC407x_8x_177x_8x.h
-      Include file:  Device\Include\system_LPC407x_8x_177x_8x.h
       Include file:  RTE_Driver\Config\RTE_Device.h
-Build Time Elapsed:  00:00:01
+      Source file:   Device\Source\ARM\startup_LPC407x_8x_177x_8x.s
+      Include file:  Device\Include\system_LPC407x_8x_177x_8x.h
+      Include file:  Device\Include\LPC407x_8x_177x_8x.h
+      Source file:   Device\Source\system_LPC407x_8x_177x_8x.c
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>
