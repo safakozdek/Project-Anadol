@@ -1,5 +1,5 @@
 Dependencies for Project 'LAB_011', Target 'NXP LPC4088': (DO NOT MODIFY !)
-F (.\main.c)(0x5E077577)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections-I.\RTE\Device\LPC4088FET208-I.\RTE\_NXP_LPC4088-IC:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include-IC:\Users\safak\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include-D__UVISION_VERSION="528" -D_RTE_ -DCORE_M4-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+F (.\main.c)(0x5E077D00)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections-I.\RTE\Device\LPC4088FET208-I.\RTE\_NXP_LPC4088-IC:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include-IC:\Users\safak\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include-D__UVISION_VERSION="528" -D_RTE_ -DCORE_M4-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
 I (C:\Users\safak\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include\LPC407x_8x_177x_8x.h)(0x539FDB22)
 I (C:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\core_cm4.h)(0x5C8F9424)
 I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5CEBC032)
@@ -12,7 +12,7 @@ I (D:\Keil\ARM\ARMCC\include\stdio.h)(0x5CEBC032)
 I (D:\Keil\ARM\ARMCC\include\string.h)(0x5CEBC032)
 I (Library/Serial.h)(0x5E0762D7)
 I (Library/SystemStructures.h)(0x5A0DD23C)
-I (Library/HM10.h)(0x5E0773B3)
+I (Library/HM10.h)(0x5E077972)
 F (.\Library\SystemStructures.h)(0x5A0DD23C)()
 F (.\Library\Serial.c)(0x5E0762DB)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections-I.\RTE\Device\LPC4088FET208-I.\RTE\_NXP_LPC4088-IC:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include-IC:\Users\safak\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include-D__UVISION_VERSION="528" -D_RTE_ -DCORE_M4-o .\objects\serial.o --omf_browse .\objects\serial.crf --depend .\objects\serial.d)
 I (Library\Serial.h)(0x5E0762D7)
@@ -25,8 +25,8 @@ I (C:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cms
 I (C:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\mpu_armv7.h)(0x5C8F9424)
 I (C:\Users\safak\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include\system_LPC407x_8x_177x_8x.h)(0x5703A0AE)
 I (Library\SystemStructures.h)(0x5A0DD23C)
-F (.\Library\HM10.c)(0x5E07742C)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections-I.\RTE\Device\LPC4088FET208-I.\RTE\_NXP_LPC4088-IC:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include-IC:\Users\safak\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include-D__UVISION_VERSION="528" -D_RTE_ -DCORE_M4-o .\objects\hm10.o --omf_browse .\objects\hm10.crf --depend .\objects\hm10.d)
-I (Library\HM10.h)(0x5E0773B3)
+F (.\Library\HM10.c)(0x5E077B89)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections-I.\RTE\Device\LPC4088FET208-I.\RTE\_NXP_LPC4088-IC:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include-IC:\Users\safak\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include-D__UVISION_VERSION="528" -D_RTE_ -DCORE_M4-o .\objects\hm10.o --omf_browse .\objects\hm10.crf --depend .\objects\hm10.d)
+I (Library\HM10.h)(0x5E077972)
 I (C:\Users\safak\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include\LPC407x_8x_177x_8x.h)(0x539FDB22)
 I (C:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\core_cm4.h)(0x5C8F9424)
 I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5CEBC032)

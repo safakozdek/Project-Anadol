@@ -70,7 +70,7 @@ void UART3_IRQHandler() {
 	HM10Buffer[HM10WriteTo++] = data;
 	
 	if (data == 10) {
-		strncpy(NextCommand, HM10Buffer, HM10WriteTo - 2);
+		strncpy(NextCommand, HM10Buffer, HM10WriteTo);
 		HM10NewDataAvailable = 1;
 		HM10_ClearBuffer();
 	}
