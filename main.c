@@ -8,6 +8,8 @@
 #include "Library/Ultrasonic.h"
 #include "Library/HM10.h"
 #include "Library/Timer.h"
+#include "Library/ADC.h"
+#include "Library/GPIO.h"
 
 #define UART_READ_BUFFER_SIZE 512
 #define UART_WRITE_BUFFER_SIZE 512
@@ -24,15 +26,12 @@ void init() {
 	
 	HM10_Init();
 	
-	LED1_Init();
-	LED2_Init();
-	LED3_Init();
-	LED4_Init();
+		
+	ADC_Init();
 	
-	LED1_On();
-	LED2_On();
-	LED3_On();
-	LED4_On();
+	Timer_Init();
+	
+	ADC_Start();
 	
 	Ultrasonic_Start_Trigger_Timer();
 }
@@ -45,10 +44,13 @@ char readWhenAvailable() {
 	return serialReceivedCharacter;
 }
 
-void sendDistance() {
-	char distStrBuf[256] = "";
+void sendStatus() {
+	char distStrBuf[512] = "";
 	
-	sprintf(distStrBuf, "{\"front\": %f, \"back\": %f}\r\n", ultrasonicSensorsDurations[0] / 58.0, ultrasonicSensorsDurations[1] / 58.0);
+	sprintf(distStrBuf, "{\"front_dist\": %f, \"back_dist\": %f, \"light\": %d}\r\n",
+				  ultrasonicSensorsDurations[0] / 58.0,
+					ultrasonicSensorsDurations[1] / 58.0,
+				  ADC_GetLastValue());
 	
 	HM10_SendCommand(distStrBuf);
 }
@@ -61,7 +63,7 @@ void update() {
 	memset(NextCommand, 0, HM10BufferSize);
 	HM10NewDataAvailable = 0;
 	
-	sendDistance();
+	sendStatus();
 	
 	/**float dist;
 	while(!ultrasonicSensorNewDataAvailable);
