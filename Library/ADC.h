@@ -18,8 +18,13 @@ typedef struct {
 #define ADC_CLOCK_FREQUENCY 1000000
 
 //Write the IOCON address of Analog Pin
-#define	ANALOG_PIN_IOCON_ADDRESS	0x4002C064
-#define ANALOG_PIN_IOCON	*((volatile uint32_t*)(ANALOG_PIN_IOCON_ADDRESS))
+#define	ANALOG_LDR1_IOCON_ADDRESS	0x4002C064
+#define	ANALOG_LDR2_IOCON_ADDRESS	0x4002C068
+#define	ANALOG_POT_IOCON_ADDRESS	0x4002C0F8
+
+#define ANALOG_LDR1_IOCON	*((volatile uint32_t*)(ANALOG_LDR1_IOCON_ADDRESS))
+#define ANALOG_LDR2_IOCON	*((volatile uint32_t*)(ANALOG_LDR2_IOCON_ADDRESS))
+#define ANALOG_POT_IOCON	*((volatile uint32_t*)(ANALOG_POT_IOCON_ADDRESS))
 
 //Write the max value of ADC.
 #define ADC_MAX_VALUE 0x00000FFF
@@ -30,12 +35,18 @@ typedef struct {
 #define ADC_BASE	0x40034000
 #define ADC	((ADC_TypeDef*) ADC_BASE)
 
-extern uint32_t ADC_Last;
-extern uint8_t ADC_New_Data_Available;
+extern uint32_t ADC_Last[8];
+extern uint8_t ADC_New_Data_Available[8];
+
+#define LDR1_CHANNEL_INDEX 3
+
+#define LDR2_CHANNEL_INDEX 2
+
+#define POTENTIOMETER_CHANNEL_INDEX 4
 
 void ADC_Init(void);
 void ADC_Start(void);
 void ADC_Stop(void);
-uint32_t ADC_GetLastValue(void);
+uint32_t ADC_GetLastValue(uint8_t);
 
 #endif

@@ -29,7 +29,7 @@ void init() {
 		
 	ADC_Init();
 	
-	Timer_Init();
+	//Timer_Init();
 	
 	ADC_Start();
 	
@@ -47,10 +47,12 @@ char readWhenAvailable() {
 void sendStatus() {
 	char distStrBuf[512] = "";
 	
-	sprintf(distStrBuf, "{\"front_dist\": %f, \"back_dist\": %f, \"light\": %d}\r\n",
+	sprintf(distStrBuf, "{\"front_dist\": %f, \"back_dist\": %f, \"light_left\": %d, \"light_right\": %d, \"pot\": %d }\r\n",
 				  ultrasonicSensorsDurations[0] / 58.0,
 					ultrasonicSensorsDurations[1] / 58.0,
-				  ADC_GetLastValue());
+				  ADC_GetLastValue(LDR1_CHANNEL_INDEX),
+					ADC_GetLastValue(LDR2_CHANNEL_INDEX),
+					ADC_GetLastValue(POTENTIOMETER_CHANNEL_INDEX));
 	
 	HM10_SendCommand(distStrBuf);
 }
