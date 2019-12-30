@@ -10,6 +10,8 @@
 #include "Library/Timer.h"
 #include "Library/ADC.h"
 #include "Library/GPIO.h"
+#include "Library/Motor.h"
+
 
 #define UART_READ_BUFFER_SIZE 512
 #define UART_WRITE_BUFFER_SIZE 512
@@ -34,6 +36,9 @@ void init() {
 	ADC_Start();
 	
 	Ultrasonic_Start_Trigger_Timer();
+	
+	Init_Motor(0);
+	Init_Motor_PWM();
 }
 
 char readWhenAvailable() {
@@ -62,45 +67,18 @@ void update() {
 	
 	HM10_SendCommand(NextCommand);
 	
+	if (strcmp(NextCommand, "STATUS\r\n") == 0) {
+		sendStatus();
+	} else if (strcmp(NextCommand, "FORWARD\r\n")  == 0){
+		Set_Motor_Direction(0, MOTOR_DIR_FORWARD);
+	} else if (strcmp(NextCommand, "BACK\r\n")  == 0){
+		Set_Motor_Direction(0, MOTOR_DIR_BACKWARD);
+	} else if (strcmp(NextCommand, "STOP\r\n")  == 0){
+		Set_Motor_Direction(0, MOTOR_DIR_BRAKE);
+	} 
+		
 	memset(NextCommand, 0, HM10BufferSize);
 	HM10NewDataAvailable = 0;
-	
-	sendStatus();
-	
-	/**float dist;
-	while(!ultrasonicSensorNewDataAvailable);
-	ultrasonicSensorNewDataAvailable=0;
-	dist = (ultrasonicSensorFallingCaptureTime - ultrasonicSensorRisingCaptureTime) / 58.0;
-
-	if(dist>35){
-			LED1_On();
-			LED2_On();
-			LED3_On();
-			LED4_On();
-	} else if(dist>25){
-			LED1_Off();
-			LED2_On();
-			LED3_On();
-			LED4_On();
-	}else if(dist>15){
-			LED1_Off();
-			LED2_Off();
-			LED3_On();
-			LED4_On();
-	}else if(dist>5){
-			LED1_Off();
-			LED2_Off();
-			LED3_Off();
-			LED4_On();
-	}
-	else{
-			LED1_Off();
-			LED2_Off();
-			LED3_Off();
-			LED4_Off();
-	}
-	**/
-
 }	
 
 int main() {

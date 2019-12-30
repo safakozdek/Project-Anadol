@@ -55,6 +55,8 @@ typedef enum {
 
 void GPIO_DIR_Write(GPIO_TypeDef* PORT,uint32_t MASK,uint8_t value);
 void GPIO_PIN_Write(GPIO_TypeDef* PORT,uint32_t MASK,uint8_t value);
+uint32_t GPIO_PIN_Read(GPIO_TypeDef* PORT,uint32_t MASK);
+
 
 void LED1_Init(void);
 void LED2_Init(void);

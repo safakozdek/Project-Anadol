@@ -1,0 +1,11 @@
+.\objects\leds.o: Library\LEDs.c
+.\objects\leds.o: Library\LEDs.h
+.\objects\leds.o: C:\Users\safak\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include\LPC407x_8x_177x_8x.h
+.\objects\leds.o: C:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\core_cm4.h
+.\objects\leds.o: D:\Keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\leds.o: C:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_version.h
+.\objects\leds.o: C:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_compiler.h
+.\objects\leds.o: C:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_armcc.h
+.\objects\leds.o: C:\Users\safak\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\mpu_armv7.h
+.\objects\leds.o: C:\Users\safak\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include\system_LPC407x_8x_177x_8x.h
+.\objects\leds.o: Library\SystemStructures.h

@@ -17,3 +17,5 @@
 .\objects\main.o: Library/Timer.h
 .\objects\main.o: Library/HM10.h
 .\objects\main.o: Library/ADC.h
+.\objects\main.o: Library/Motor.h
+.\objects\main.o: Library/PWM.h
