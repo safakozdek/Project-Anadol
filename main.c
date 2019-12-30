@@ -11,6 +11,7 @@
 #include "Library/ADC.h"
 #include "Library/GPIO.h"
 #include "Library/Motor.h"
+#include "Library/LEDs.h"
 
 
 #define UART_READ_BUFFER_SIZE 512
@@ -25,20 +26,19 @@ void init() {
 	Ultrasonic_Capture_Timer_Init();
 	
 	Serial_Init();
-	
 	HM10_Init();
 	
-		
 	ADC_Init();
+	ADC_Start();
 	
 	//Timer_Init();
 	
-	ADC_Start();
-	
-	Ultrasonic_Start_Trigger_Timer();
-	
 	Init_Motor(0);
 	Init_Motor_PWM();
+	
+	Init_LED();
+	
+	Ultrasonic_Start_Trigger_Timer();
 }
 
 char readWhenAvailable() {
@@ -71,10 +71,17 @@ void update() {
 		sendStatus();
 	} else if (strcmp(NextCommand, "FORWARD\r\n")  == 0){
 		Set_Motor_Direction(0, MOTOR_DIR_FORWARD);
+		frontLED();
 	} else if (strcmp(NextCommand, "BACK\r\n")  == 0){
 		Set_Motor_Direction(0, MOTOR_DIR_BACKWARD);
+		backLED();
 	} else if (strcmp(NextCommand, "STOP\r\n")  == 0){
 		Set_Motor_Direction(0, MOTOR_DIR_BRAKE);
+		turnOffLED();
+	} else if (strcmp(NextCommand, "LEFT\r\n")  == 0){
+		leftLED();
+	} else if (strcmp(NextCommand, "RIGHT\r\n")  == 0){
+		rightLED();
 	} 
 		
 	memset(NextCommand, 0, HM10BufferSize);

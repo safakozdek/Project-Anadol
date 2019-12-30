@@ -19,7 +19,7 @@ void PWM_Init(const uint8_t pwmIndex, const uint8_t channels[], const uint8_t n_
 	
 	PWMX->TCR = 1 << 1;
 	
-	//PWMX->PR = 9; TODO
+	PWMX->PR = 9; 
 	
 	//Configure MR0 register for a period of 20 ms
 	PWMX->MR0_3[0] = 1200000;
@@ -38,13 +38,13 @@ void PWM_Cycle_Rate(uint8_t pwmIndex, uint32_t period) {
 	//Write a formula that changes the MR0 register value for a given parameter.
 	PWM_TypeDef *const PWMX = PWMs[pwmIndex];
 	
-	PWMX->MR0_3[0] = (PERIPHERAL_CLOCK_FREQUENCY / 1000) * period;
+	PWMX->MR0_3[0] = (PERIPHERAL_CLOCK_FREQUENCY / (PWMX->PR + 1) / 1000) * period;
 
 	PWMX->LER |= 1 << 0;
 }
 
 void PWM_Write(uint8_t pwmIndex, uint8_t channelIndex, uint32_t T_ON) {	
-	 PWM_TypeDef * PWMX = PWMs[pwmIndex];
+	PWM_TypeDef * PWMX = PWMs[pwmIndex];
 	volatile uint32_t *pMR = channelIndex > 3 ? &PWMX->MR4_6[channelIndex - 4] : &PWMX->MR0_3[channelIndex]; 
 	
 	if(T_ON > 100) {
@@ -52,5 +52,5 @@ void PWM_Write(uint8_t pwmIndex, uint8_t channelIndex, uint32_t T_ON) {
 	}
 	
 	*pMR = (T_ON * PWMX->MR0_3[0]) / 100;
-	PWMX->LER = 1 << (channelIndex);
+	PWMX->LER = (1 << 8) - 1;
 }

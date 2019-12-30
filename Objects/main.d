@@ -19,3 +19,4 @@
 .\objects\main.o: Library/ADC.h
 .\objects\main.o: Library/Motor.h
 .\objects\main.o: Library/PWM.h
+.\objects\main.o: Library/LEDs.h
