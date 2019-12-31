@@ -1,4 +1,8 @@
 #include "Motor.h"
+#include "stdlib.h"
+
+volatile uint32_t tickCount = 0,
+									rotateUntilTick = 0;
 
 const uint32_t MOTORS_IN_MASKS[][2] = {{MOTOR1_IN1_MASK, MOTOR1_IN2_MASK}, {MOTOR2_IN1_MASK, MOTOR2_IN2_MASK}};
 const uint32_t MOTORS_IOCON_ADDRS[][3] = {{MOTOR1_IN1_IOCON_ADDRESS, MOTOR1_IN2_IOCON_ADDRESS, MOTOR1_SPEED_IOCON_ADDRESS},
@@ -15,6 +19,8 @@ void IOCON_Func_Set(uint32_t ioconAddr, uint8_t func) {
 	*((volatile uint32_t*)(ioconAddr)) = (*((volatile uint32_t*)(ioconAddr)) & ~(0x7)) | func;
 }
 
+void Init_Tick_Interrupt();
+
 void Init_Motor(uint8_t motorIndex) {
 	uint32_t i;
 	
@@ -30,6 +36,8 @@ void Init_Motor(uint8_t motorIndex) {
 	// Initially break the motors
 	GPIO_PIN_Write(MOTORS_GPIO_PORTS[motorIndex][0], MOTORS_GPIO_MASKS[motorIndex][0], 0);
 	GPIO_PIN_Write(MOTORS_GPIO_PORTS[motorIndex][1], MOTORS_GPIO_MASKS[motorIndex][1], 0);
+	
+	Init_Tick_Interrupt();
 }
 
 void Init_Motor_PWM() {
@@ -38,9 +46,17 @@ void Init_Motor_PWM() {
 }
 
 // speed: 0 to 100
-void Set_Motor_Speed(uint8_t motorIndex, uint8_t speed) {
+void Set_Motor_Speed(uint8_t motorIndex, int8_t speed) {
 	motorSpeed[motorIndex] = speed;
-	PWM_Write(MOTOR_PWM_INDEX, MOTOR_PWM_CHANNELS[motorIndex], speed); 
+	
+	PWM_Write(MOTOR_PWM_INDEX, MOTOR_PWM_CHANNELS[motorIndex], abs(speed));
+	
+	if (speed == 0)
+		Set_Motor_Direction(motorIndex, MOTOR_DIR_BRAKE);
+	else if (speed > 0)
+		Set_Motor_Direction(motorIndex, MOTOR_DIR_FORWARD);
+	else
+		Set_Motor_Direction(motorIndex, MOTOR_DIR_BACKWARD);
 }
 
 void Set_Motor_Direction(uint8_t motorIndex, uint8_t dir) {
@@ -59,3 +75,34 @@ void Pause_Motor(uint8_t motorIndex) {
 	GPIO_PIN_Write(MOTORS_GPIO_PORTS[motorIndex][0], MOTORS_GPIO_MASKS[motorIndex][0], MOTOR_DIR_BRAKE & 1);
 	GPIO_PIN_Write(MOTORS_GPIO_PORTS[motorIndex][1], MOTORS_GPIO_MASKS[motorIndex][1], (MOTOR_DIR_BRAKE >> 1) & 1);
 }
+
+void Turn(int8_t dir) { // 1: right, -1: left
+	rotateUntilTick = getTickCount() + 20;
+	Set_Motor_Speed(LEFT_MOTOR_INDEX, 90 * dir);
+	Set_Motor_Speed(RIGHT_MOTOR_INDEX, -90 * dir);
+}
+
+
+void Init_Tick_Interrupt() {
+	//Change the functionality of the push button as EINT0
+	IOCON_SPEED_SENSOR = (IOCON_SPEED_SENSOR & ~(0x7)) | 1;
+	//Change the External interrupt mode as Edge Sensitive
+	TICK_EXT->EXTMODE |= 1;
+	//Change polarity of the External Interrupt as Low-active
+	TICK_EXT->EXTPOLAR |= 1;
+	//Enable interrupt for EINT0_IRQn
+	NVIC_EnableIRQ(EINT0_IRQn);
+}
+
+
+void EINT0_IRQHandler() {
+	TICK_EXT->EXTINT |= 1;
+	
+	Set_Motor_Speed(0, 0);
+	Set_Motor_Speed(1, 0);
+}
+
+volatile uint32_t getTickCount(){
+	return tickCount;
+}
+

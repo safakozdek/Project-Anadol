@@ -52,7 +52,8 @@ void ADC_IRQHandler() {
 			
 			// TODO burayi ayri fonksiyona tasi
 			if (i == POTENTIOMETER_CHANNEL_INDEX) {
-				 Set_Motor_Speed(0, (4096 - ADC_Values[i]) * 100  / 4096.0);
+				PWM_Write(MOTOR_PWM_INDEX, 4, (4096 - ADC_Values[i]) * 100  / 4096.0);
+				 // Set_Motor_Speed(0, (4096 - ADC_Values[i]) * 100  / 4096.0);
 			} else if ((i == LDR1_CHANNEL_INDEX || i == LDR2_CHANNEL_INDEX)) {
 				if (ADC_Values[i] < LDR_BRIGHT_LIMIT) {
 					Pause_Motor(0);

@@ -20,6 +20,9 @@
 char uartReadBuffer[UART_READ_BUFFER_SIZE] = "";
 char uartWriteBuffer[UART_WRITE_BUFFER_SIZE] = ""; 
 
+
+
+
 void init() {	
 	Ultrasonic_Init();
 	Ultrasonic_Trigger_Timer_Init();
@@ -70,16 +73,19 @@ void update() {
 	if (strcmp(NextCommand, "STATUS\r\n") == 0) {
 		sendStatus();
 	} else if (strcmp(NextCommand, "FORWARD\r\n")  == 0){
-		Set_Motor_Direction(0, MOTOR_DIR_FORWARD);
+		//Set_Motor_Direction(0, MOTOR_DIR_FORWARD);
+		Set_Motor_Speed(0, 90);
 		frontLED();
 	} else if (strcmp(NextCommand, "BACK\r\n")  == 0){
-		Set_Motor_Direction(0, MOTOR_DIR_BACKWARD);
+		// Set_Motor_Direction(0, MOTOR_DIR_BACKWARD);
+		Set_Motor_Speed(0, -90);
 		backLED();
 	} else if (strcmp(NextCommand, "STOP\r\n")  == 0){
-		Set_Motor_Direction(0, MOTOR_DIR_BRAKE);
+		Set_Motor_Speed(0, 0);
 		turnOffLED();
 	} else if (strcmp(NextCommand, "LEFT\r\n")  == 0){
 		leftLED();
+		Turn(TURN_DIR_LEFT);
 	} else if (strcmp(NextCommand, "RIGHT\r\n")  == 0){
 		rightLED();
 	} 
