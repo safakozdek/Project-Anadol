@@ -41,7 +41,7 @@ extern uint8_t ADC_New_Data_Available[8];
 #define LDR1_CHANNEL_INDEX 3
 #define LDR2_CHANNEL_INDEX 2
 
-#define LDR_BRIGHT_LIMIT 2550
+#define LDR_BRIGHT_LIMIT 1500
 
 #define POTENTIOMETER_CHANNEL_INDEX 4
 

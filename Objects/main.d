@@ -10,6 +10,7 @@
 .\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 .\objects\main.o: Library/Serial.h
 .\objects\main.o: Library/SystemStructures.h
 .\objects\main.o: Library/Ultrasonic.h
@@ -20,3 +21,4 @@
 .\objects\main.o: Library/Motor.h
 .\objects\main.o: Library/PWM.h
 .\objects\main.o: Library/LEDs.h
+.\objects\main.o: Library/wait.h
