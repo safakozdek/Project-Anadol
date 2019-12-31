@@ -77,29 +77,15 @@ void Pause_Motor(uint8_t motorIndex) {
 }
 
 void Turn(int8_t dir) { // 1: right, -1: left
-	rotateUntilTick = getTickCount() + 20;
+	rotateUntilTick = getTickCount() + 10;
 	Set_Motor_Speed(LEFT_MOTOR_INDEX, 90 * dir);
 	Set_Motor_Speed(RIGHT_MOTOR_INDEX, -90 * dir);
 }
 
 
 void Init_Tick_Interrupt() {
-	//Change the functionality of the push button as EINT0
-	IOCON_SPEED_SENSOR = (IOCON_SPEED_SENSOR & ~(0x7)) | 1;
-	//Change the External interrupt mode as Edge Sensitive
-	TICK_EXT->EXTMODE |= 1;
-	//Change polarity of the External Interrupt as Low-active
-	TICK_EXT->EXTPOLAR |= 1;
-	//Enable interrupt for EINT0_IRQn
-	NVIC_EnableIRQ(EINT0_IRQn);
-}
-
-
-void EINT0_IRQHandler() {
-	TICK_EXT->EXTINT |= 1;
-	
-	Set_Motor_Speed(0, 0);
-	Set_Motor_Speed(1, 0);
+	//Change the functionality of the interrupt sensor's pin as T2_CAP_0
+	IOCON_SPEED_SENSOR = (IOCON_SPEED_SENSOR & ~(0x7)) | 0x3;
 }
 
 volatile uint32_t getTickCount(){

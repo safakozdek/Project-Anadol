@@ -87,6 +87,7 @@ void update() {
 		leftLED();
 		Turn(TURN_DIR_LEFT);
 	} else if (strcmp(NextCommand, "RIGHT\r\n")  == 0){
+		Turn(TURN_DIR_RIGHT);
 		rightLED();
 	} 
 		

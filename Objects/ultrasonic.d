@@ -11,3 +11,6 @@
 .\objects\ultrasonic.o: C:\Users\Bartu\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include\system_LPC407x_8x_177x_8x.h
 .\objects\ultrasonic.o: Library\Timer.h
 .\objects\ultrasonic.o: Library\SystemStructures.h
+.\objects\ultrasonic.o: Library\Motor.h
+.\objects\ultrasonic.o: Library\PWM.h
+.\objects\ultrasonic.o: Library\LEDs.h

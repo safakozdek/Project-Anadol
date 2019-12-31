@@ -1,4 +1,6 @@
 #include "Ultrasonic.h"
+#include "Motor.h"
+#include "LEDs.h"
 
 uint32_t ultrasonicSensorsRisingCaptureTime[2] = {0};
 uint32_t ultrasonicSensorsFallingCaptureTime[2] = {0};
@@ -31,6 +33,9 @@ void Ultrasonic_Trigger_Timer_Init() {
 	
 	// Write the Correct Configuration for EMR (LOW output value of Trigger Pin when match occurs and Initial value is LOW)
 	TIMER2->EMR = (TIMER2->EMR | 1<<10)  & ~(1<<11 | 1<<3);
+	
+	// Capture for interrupt sensor (interrupt on falling edge)
+	TIMER2->CCR = 5;
 	
 	NVIC_EnableIRQ(TIMER2_IRQn);
 	
@@ -80,19 +85,35 @@ void Ultrasonic_Start_Trigger_Timer() {
 
 void TIMER2_IRQHandler() {
 	//Write HIGH bit value to IR Register for Corresponding Interrupt
-	TIMER2->IR |= 1 << 3;
+	if (TIMER2->IR & 1 << 3) {
+		// Time to trigger the ultrasonic sensor
+ 		
+		TIMER2->IR |= 1 << 3;
 
-	if(ultrasonicSensorTriggerStart == 0) {
-		//Change MR3 Register Value for Suggested Waiting
-		TIMER2->MR3 = 60000 + TIMER2->TC;
+		if(ultrasonicSensorTriggerStart == 0) {
+			//Change MR3 Register Value for Suggested Waiting
+			TIMER2->MR3 = 60000 + TIMER2->TC;
+			
+			ultrasonicSensorTriggerStart = 1;
+		}
+		else {
+			TIMER2->EMR |= (1 << 3);
+			TIMER2->MR3 = 10 + TIMER2->TC;
+			
+			ultrasonicSensorTriggerStart = 0;
+		}
+	} else if (TIMER2->IR & 1 << 4) {
+		TIMER2->IR |= 1 << 4;
 		
-		ultrasonicSensorTriggerStart = 1;
-	}
-	else {
-		TIMER2->EMR |= (1 << 3);
-		TIMER2->MR3 = 10 + TIMER2->TC;
+		++tickCount;
 		
-		ultrasonicSensorTriggerStart = 0;
+		if (rotateUntilTick > 0 && tickCount >= rotateUntilTick) {
+			Set_Motor_Speed(0, 0);
+			Set_Motor_Speed(1, 0);
+			turnOffLED();
+			
+			rotateUntilTick = 0;
+		}
 	}
 }
 

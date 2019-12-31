@@ -27,58 +27,67 @@ Project File Date:  12/31/2019
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Rebuild target 'NXP LPC4088'
+compiling Serial.c...
 compiling main.c...
 Library/HM10.h(33): warning:  #1295-D: Deprecated declaration HM10_ReadCommand - give arg types
   char *HM10_ReadCommand();
-Library/Motor.h(49): warning:  #1295-D: Deprecated declaration Init_Motor_PWM - give arg types
+Library/Motor.h(39): warning:  #1295-D: Deprecated declaration Init_Motor_PWM - give arg types
   void Init_Motor_PWM();
-Library/Motor.h(54): warning:  #815-D: type qualifier on return type is meaningless
+Library/Motor.h(44): warning:  #815-D: type qualifier on return type is meaningless
   volatile uint32_t getTickCount();
-Library/Motor.h(54): warning:  #1295-D: Deprecated declaration getTickCount - give arg types
+Library/Motor.h(44): warning:  #1295-D: Deprecated declaration getTickCount - give arg types
   volatile uint32_t getTickCount();
-Library/Motor.h(57): warning:  #1-D: last line of file ends without a newline
+Library/Motor.h(51): warning:  #1-D: last line of file ends without a newline
   #endif
 main.c: 5 warnings, 0 errors
-compiling Serial.c...
 compiling HM10.c...
 Library\HM10.h(33): warning:  #1295-D: Deprecated declaration HM10_ReadCommand - give arg types
   char *HM10_ReadCommand();
 Library\HM10.c: 1 warning, 0 errors
+compiling GPIO.c...
 compiling Timer.c...
 compiling Ultrasonic.c...
-compiling GPIO.c...
-compiling Wait.c...
-compiling LEDs.c...
-compiling ADC.c...
-Library\Motor.h(49): warning:  #1295-D: Deprecated declaration Init_Motor_PWM - give arg types
+Library\Motor.h(39): warning:  #1295-D: Deprecated declaration Init_Motor_PWM - give arg types
   void Init_Motor_PWM();
-Library\Motor.h(54): warning:  #815-D: type qualifier on return type is meaningless
+Library\Motor.h(44): warning:  #815-D: type qualifier on return type is meaningless
   volatile uint32_t getTickCount();
-Library\Motor.h(54): warning:  #1295-D: Deprecated declaration getTickCount - give arg types
+Library\Motor.h(44): warning:  #1295-D: Deprecated declaration getTickCount - give arg types
   volatile uint32_t getTickCount();
-Library\Motor.h(57): warning:  #1-D: last line of file ends without a newline
+Library\Motor.h(51): warning:  #1-D: last line of file ends without a newline
+  #endif
+Library\Ultrasonic.c: 4 warnings, 0 errors
+compiling Wait.c...
+compiling ADC.c...
+Library\Motor.h(39): warning:  #1295-D: Deprecated declaration Init_Motor_PWM - give arg types
+  void Init_Motor_PWM();
+Library\Motor.h(44): warning:  #815-D: type qualifier on return type is meaningless
+  volatile uint32_t getTickCount();
+Library\Motor.h(44): warning:  #1295-D: Deprecated declaration getTickCount - give arg types
+  volatile uint32_t getTickCount();
+Library\Motor.h(51): warning:  #1-D: last line of file ends without a newline
   #endif
 Library\ADC.c: 4 warnings, 0 errors
+compiling LEDs.c...
 assembling startup_LPC407x_8x_177x_8x.s...
 compiling Motor.c...
-Library\Motor.h(49): warning:  #1295-D: Deprecated declaration Init_Motor_PWM - give arg types
+Library\Motor.h(39): warning:  #1295-D: Deprecated declaration Init_Motor_PWM - give arg types
   void Init_Motor_PWM();
-Library\Motor.h(54): warning:  #815-D: type qualifier on return type is meaningless
+Library\Motor.h(44): warning:  #815-D: type qualifier on return type is meaningless
   volatile uint32_t getTickCount();
-Library\Motor.h(54): warning:  #1295-D: Deprecated declaration getTickCount - give arg types
+Library\Motor.h(44): warning:  #1295-D: Deprecated declaration getTickCount - give arg types
   volatile uint32_t getTickCount();
-Library\Motor.h(57): warning:  #1-D: last line of file ends without a newline
+Library\Motor.h(51): warning:  #1-D: last line of file ends without a newline
   #endif
 Library\Motor.c(22): warning:  #1295-D: Deprecated declaration Init_Tick_Interrupt - give arg types
   void Init_Tick_Interrupt();
-Library\Motor.c(105): warning:  #815-D: type qualifier on return type is meaningless
+Library\Motor.c(91): warning:  #815-D: type qualifier on return type is meaningless
   volatile uint32_t getTickCount(){
 Library\Motor.c: 6 warnings, 0 errors
 compiling PWM.c...
 compiling system_LPC407x_8x_177x_8x.c...
 linking...
 Program Size: Code=8312 RO-data=460 RW-data=80 ZI-data=1568  
-".\Objects\LAB_011.axf" - 0 Error(s), 16 Warning(s).
+".\Objects\LAB_011.axf" - 0 Error(s), 20 Warning(s).
 
 <h2>Software Packages used:</h2>
 
