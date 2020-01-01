@@ -30,7 +30,7 @@ void HM10_SendCommand(char* command);
 void HM10_SendData(char*);
 void HM10_ClearBuffer(void);
 
-char *HM10_ReadCommand();
+char *HM10_ReadCommand(void);
 
 char HM10_ReadData(void);
 void HM10_WriteData(char data);

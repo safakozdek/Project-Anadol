@@ -49,14 +49,6 @@ void ADC_IRQHandler() {
 		if (doneFlags & (1 << i)) {
 			ADC_Values[i] = (ADC->DR[i] >> 4) & ((1<<12) - 1);
 			ADC_New_Data_Available[i] = 1;
-			
-			/*if ((i == LDR1_CHANNEL_INDEX || i == LDR2_CHANNEL_INDEX)) {
-				if (ADC_Values[i] < LDR_BRIGHT_LIMIT) {
-					Pause_Motor(0);
-				} else {
-					Resume_Motor(0);
-				}		 
-			}*/
 		}
 	}		
 }

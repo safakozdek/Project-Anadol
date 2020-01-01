@@ -36,13 +36,13 @@
 #define IOCON_SPEED_SENSOR	*((volatile uint32_t*)(IOCON_SPEED_SENSOR_ADDRESS)) //P34 - P0.4
 
 void Init_Motor(uint8_t);
-void Init_Motor_PWM();
+void Init_Motor_PWM(void);
 void Set_Motor_Speed(uint8_t motorIndex, int8_t speed);
 void Set_Motor_Direction(uint8_t motorIndex, uint8_t dir);
 void Resume_Motor(uint8_t motorIndex);
 void Pause_Motor(uint8_t motorIndex);
-volatile uint32_t getTickCount();
-void Turn(int8_t dir);
+uint32_t getTickCount(void);
+void Turn(int8_t dir, uint8_t power);
 
 
 extern volatile uint32_t tickCount,

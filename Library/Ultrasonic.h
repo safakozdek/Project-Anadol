@@ -19,6 +19,7 @@
 
 extern uint32_t ultrasonicSensorsDurations[2];
 extern uint8_t ultrasonicSensorsNewDataAvailable[2];
+extern uint8_t isTurnComplete;
 
 void Ultrasonic_Init(void);
 void Ultrasonic_Trigger_Timer_Init(void);

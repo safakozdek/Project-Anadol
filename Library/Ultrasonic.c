@@ -11,6 +11,8 @@ uint8_t ultrasonicSensorsNewDataAvailable[2] = {0};
 uint8_t ultrasonicSensorTriggerStart = 0;
 uint8_t ultrasonicSensorsCaptureRisingEdge[2] = {0};
 
+uint8_t isTurnComplete = 0; 
+
 void Ultrasonic_Init() {
 	IOCON_TRIGGER |= 0x03;
 	IOCON_ECHO_1 |= 0x03;
@@ -108,10 +110,7 @@ void TIMER2_IRQHandler() {
 		++tickCount;
 		
 		if (rotateUntilTick > 0 && tickCount >= rotateUntilTick) {
-			Set_Motor_Speed(0, 0);
-			Set_Motor_Speed(1, 0);
-			turnOffLED();
-			
+			isTurnComplete = 1;
 			rotateUntilTick = 0;
 		}
 	}

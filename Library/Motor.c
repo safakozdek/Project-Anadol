@@ -1,6 +1,8 @@
 #include "Motor.h"
 #include "stdlib.h"
 
+#define ticksNeededToTurn 10
+
 volatile uint32_t tickCount = 0,
 									rotateUntilTick = 0;
 
@@ -19,7 +21,7 @@ void IOCON_Func_Set(uint32_t ioconAddr, uint8_t func) {
 	*((volatile uint32_t*)(ioconAddr)) = (*((volatile uint32_t*)(ioconAddr)) & ~(0x7)) | func;
 }
 
-void Init_Tick_Interrupt();
+void Init_Tick_Interrupt(void);
 
 void Init_Motor(uint8_t motorIndex) {
 	uint32_t i;
@@ -76,10 +78,10 @@ void Pause_Motor(uint8_t motorIndex) {
 	GPIO_PIN_Write(MOTORS_GPIO_PORTS[motorIndex][1], MOTORS_GPIO_MASKS[motorIndex][1], (MOTOR_DIR_BRAKE >> 1) & 1);
 }
 
-void Turn(int8_t dir) { // 1: right, -1: left
-	rotateUntilTick = getTickCount() + 10;
-	Set_Motor_Speed(LEFT_MOTOR_INDEX, 90 * dir);
-	Set_Motor_Speed(RIGHT_MOTOR_INDEX, -90 * dir);
+void Turn(int8_t dir, uint8_t power) { // 1: right, -1: left
+	rotateUntilTick = getTickCount() + ticksNeededToTurn;
+	Set_Motor_Speed(LEFT_MOTOR_INDEX, power * dir);
+	Set_Motor_Speed(RIGHT_MOTOR_INDEX, -power * dir);
 }
 
 
@@ -88,7 +90,7 @@ void Init_Tick_Interrupt() {
 	IOCON_SPEED_SENSOR = (IOCON_SPEED_SENSOR & ~(0x7)) | 0x3;
 }
 
-volatile uint32_t getTickCount(){
+uint32_t getTickCount(){
 	return tickCount;
 }
 

@@ -27,12 +27,12 @@ void controlLoop(){
             if(strcmp(nextCommand, "TEST") == 0){
                 printString("TESTING\r\n");
                 strcpy(currentMode, "TEST");
-                strcpy(currentMode, "IDLE");
+                strcpy(currentState, "IDLE");
 
             } else if (strcmp(nextCommand, "AUTO") == 0){
                 printString("AUTONOMOUS\r\n")
                 strcpy(currentMode, "AUTO");
-                strcpy(currentMode, "IDLE");
+                strcpy(currentState, "IDLE");
 
             } else if (strcmp(nextCommand, "LEFT") == 0){
                 strcpy(currentState, "LEFT");

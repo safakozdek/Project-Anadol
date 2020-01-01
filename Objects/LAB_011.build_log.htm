@@ -28,18 +28,14 @@ Project File Date:  12/31/2019
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'NXP LPC4088'
 compiling main.c...
-Library/HM10.h(33): warning:  #1295-D: Deprecated declaration HM10_ReadCommand - give arg types
-  char *HM10_ReadCommand();
-Library/Motor.h(39): warning:  #1295-D: Deprecated declaration Init_Motor_PWM - give arg types
-  void Init_Motor_PWM();
-Library/Motor.h(44): warning:  #815-D: type qualifier on return type is meaningless
-  volatile uint32_t getTickCount();
-Library/Motor.h(44): warning:  #1295-D: Deprecated declaration getTickCount - give arg types
-  volatile uint32_t getTickCount();
-main.c: 4 warnings, 0 errors
+main.c(165): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  		if(potentVal < 0.1) potentVal = 0;
+main.c(166): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  		else if(potentVal > 0.9) potentVal = 1;
+main.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=9320 RO-data=460 RW-data=120 ZI-data=1568  
-".\Objects\LAB_011.axf" - 0 Error(s), 4 Warning(s).
+Program Size: Code=9728 RO-data=460 RW-data=124 ZI-data=1572  
+".\Objects\LAB_011.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -66,11 +62,11 @@ Package Vendor: Keil
    * Component: ARM::CMSIS:CORE:5.2.0
 
    * Component: Keil::Device:Startup:1.0.1
-      Include file:  RTE_Driver\Config\RTE_Device.h
-      Include file:  Device\Include\LPC407x_8x_177x_8x.h
-      Source file:   Device\Source\system_LPC407x_8x_177x_8x.c
-      Include file:  Device\Include\system_LPC407x_8x_177x_8x.h
       Source file:   Device\Source\ARM\startup_LPC407x_8x_177x_8x.s
+      Include file:  Device\Include\system_LPC407x_8x_177x_8x.h
+      Include file:  RTE_Driver\Config\RTE_Device.h
+      Source file:   Device\Source\system_LPC407x_8x_177x_8x.c
+      Include file:  Device\Include\LPC407x_8x_177x_8x.h
 Build Time Elapsed:  00:00:01
 </pre>
 </body>
