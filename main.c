@@ -18,7 +18,7 @@
 #define UART_READ_BUFFER_SIZE 512
 #define UART_WRITE_BUFFER_SIZE 512
 
-#define kP 8
+#define kP 7
 #define kD 0
 #define finishLight 1750
 
@@ -111,7 +111,6 @@ void moveAutonomous(float baseSpeed){
 		float backSonar = getBackUltrasonic();
     float frontSonar = getFrontUltrasonic();
 	
-	
     double error = frontSonar - backSonar;
     double correction = (error * kP) + ((error - lastError) * kD);
 
@@ -120,19 +119,21 @@ void moveAutonomous(float baseSpeed){
 			leftPower = 0;
 		} else if(backSonar > 100){
 			return;
-		} /*else if(backSonar < 100 && backSonar > 30){
-			return;
-		} else if(backSonar > 100){
-			return;
-		}*/ else if (frontSonar < backSonar) {
+		} else if(backSonar > 32 && frontSonar > 32){
+			rightPower = baseSpeed;
+			leftPower = -3;
+		} else if(backSonar < 18 && frontSonar < 18){
+			rightPower = 0;
+			leftPower = baseSpeed;
+		} else if (frontSonar < backSonar) {
 			rightPower = (baseSpeed + (correction * 3)) < 0 ? 0 : (baseSpeed + (correction * 3));
 			leftPower = baseSpeed - correction;
-		} else if (fabs(frontSonar - backSonar) < 1) {
+		} else if (fabs(frontSonar - backSonar) < 1.5) {
 			rightPower = baseSpeed;
 			leftPower = baseSpeed ;
 		} else {
-			rightPower = baseSpeed + correction * 1.5;
-			leftPower = (baseSpeed - (correction * 7)) < -5 ? -5 : (baseSpeed - (correction * 7));
+			rightPower = baseSpeed + correction;
+			leftPower = (baseSpeed - (correction * 5)) < -5 ? -5 : (baseSpeed - (correction * 5));
 		}
 	 
 		if(minLightVal > finishLight){
@@ -177,6 +178,7 @@ void update() {
         strcpy(currentState, "IDLE");
 		}else if (strcmp(NextCommand, "START\r\n")  == 0){
         strcpy(currentState, "START");
+				lastError = 0;
 		}
 		
 		memset(NextCommand, 0, HM10BufferSize);
@@ -237,10 +239,9 @@ void update() {
 	} else if(strcmp(currentMode, "AUTO") == 0){
 			if(strcmp(currentState, "START") == 0){
 					frontLED();
-					moveAutonomous(85);
+					moveAutonomous(90);
 			} else if(strcmp(currentState, "IDLE") == 0){
 					turnOffLED();
-				
 					Set_Motor_Speed(LEFT_MOTOR_INDEX, 0);
 					Set_Motor_Speed(RIGHT_MOTOR_INDEX, 0);
       }
