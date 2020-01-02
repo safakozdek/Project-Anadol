@@ -18,15 +18,17 @@
 #define UART_READ_BUFFER_SIZE 512
 #define UART_WRITE_BUFFER_SIZE 512
 
-#define kP 2.5
-#define kD 0.1
-#define startLightDetection 2500
-#define finishLight 1600
+#define kP 8
+#define kD 0//0.1
+#define startLightDetection 1500
+#define finishLight 2500
 
-char currentMode[15] = "TEST";
-char currentState[15] = "IDLE";
+char currentMode[15] = "TEST"; // TEST, AUTONOMUS
+char currentState[15] = "IDLE"; // IDLE, FORWARD, BACK, RIGHT, LEFT
 double lastError = 0;
 uint8_t isTurning = 0;
+float leftPower=0;
+float rightPower=0;
 
 char uartReadBuffer[UART_READ_BUFFER_SIZE] = "";
 char uartWriteBuffer[UART_WRITE_BUFFER_SIZE] = "";
@@ -42,7 +44,8 @@ void init() {
 	ADC_Init();
 	ADC_Start();
 	
-	Init_Motor(0);
+	Init_Motor(LEFT_MOTOR_INDEX);
+	Init_Motor(RIGHT_MOTOR_INDEX);
 	Init_Motor_PWM();
 	
 	Init_LED();
@@ -58,40 +61,49 @@ char readWhenAvailable() {
 	return serialReceivedCharacter;
 }
 
+uint32_t getRightLDR(){
+	return ADC_MAX_VALUE - ADC_GetLastValue(RIGHT_LDR_CHANNEL_INDEX);
+}
+
+uint32_t getLeftLDR(){
+	return ADC_MAX_VALUE - ADC_GetLastValue(LEFT_LDR_CHANNEL_INDEX);
+}
+
+float getPotentiometer(){
+	return ADC_GetLastValue(POTENTIOMETER_CHANNEL_INDEX) / 4096.0;
+}
+
 void sendStatus() {
 	char distStrBuf[512] = "";
 	
-	sprintf(distStrBuf, "{\"front_dist\": %f, \"back_dist\": %f, \"light_left\": %d, \"light_right\": %d, \"pot\": %d }\r\n",
+	sprintf(distStrBuf, "{\"front_dist\": %f, \"back_dist\": %f, \"light_left\": %d, \"light_right\": %d, \"pot\": %f }\r\n",
 				  ultrasonicSensorsDurations[0] / 58.0,
 					ultrasonicSensorsDurations[1] / 58.0,
-				  ADC_GetLastValue(LDR1_CHANNEL_INDEX),
-					ADC_GetLastValue(LDR2_CHANNEL_INDEX),
-					ADC_GetLastValue(POTENTIOMETER_CHANNEL_INDEX));
+				  getLeftLDR(),
+					getRightLDR(),
+					getPotentiometer());
 	
 	HM10_SendCommand(distStrBuf);
 }
 
-uint32_t getRightLDR(){
-	return ADC_GetLastValue(2);
-}
-
-uint32_t getLeftLDR(){
-	return ADC_GetLastValue(3);
-}
-
-float getPotentiometer(){
-	int x = ADC_GetLastValue(4);
-	return ADC_GetLastValue(4) / 4096.0;
+void sendAutonomousStatus(float leftPower, float rightPower) {
+	char distStrBuf[512] = "";
+	
+	sprintf(distStrBuf, "{\"left_power\": %f, \"right_power\": %f }\r\n",
+				  leftPower,
+					rightPower);
+	
+	HM10_SendCommand(distStrBuf);
 }
 
 float getBackUltrasonic(){
-	return (ultrasonicSensorsDurations[1] / 58.0);
+	return (ultrasonicSensorsDurations[BACK_ULTRASONIC_INDEX] / 58.0);
 }
 
 float getFrontUltrasonic(){
-	return (ultrasonicSensorsDurations[0] / 58.0);
+	return (ultrasonicSensorsDurations[FRONT_ULTRASONIC_INDEX] / 58.0);
 }
-
+ 
 void moveAutonomous(float baseSpeed){
     uint32_t leftLDRValue = getLeftLDR();
     uint32_t rightLDRValue = getRightLDR();
@@ -99,43 +111,42 @@ void moveAutonomous(float baseSpeed){
     
 		float backSonar = getBackUltrasonic();
     float frontSonar = getFrontUltrasonic();
-    float leftPower = baseSpeed;
-    float rightPower = baseSpeed;
-
+	
+	
     double error = frontSonar - backSonar;
     double correction = (error * kP) + ((error - lastError) * kD);
 
-    if(backSonar < 19 || frontSonar < 19 ){
-        leftPower = baseSpeed - 7;
-        rightPower = baseSpeed + 7;
-    } else if (backSonar > 31 || frontSonar > 31){
-        leftPower = baseSpeed + 7;
-        rightPower = baseSpeed - 7;
-    } else {
-        leftPower = baseSpeed + correction;
-        rightPower = baseSpeed - correction;
-    }
-
-    //Closing to the light
-		if(minLightVal > 300 && minLightVal < finishLight){
+	  if (backSonar > 100 || frontSonar > 100)
+			return;
+	 
+		leftPower = baseSpeed + correction;
+		rightPower = baseSpeed - correction;
+	
+		/*if(minLightVal > finishLight){
         HM10_SendCommand("FINISH");
         strcpy(currentState, "IDLE");
         return;
-    } else if(minLightVal > 300 && minLightVal < startLightDetection){
-        leftPower = (leftPower * ((minLightVal - finishLight) / (startLightDetection-finishLight))) + 5;
-        rightPower = (rightPower * ((minLightVal - finishLight) / (startLightDetection-finishLight))) + 5;
-    } 
+    } else if(minLightVal > startLightDetection){
+       leftPower = (leftPower * ((minLightVal - finishLight) / (startLightDetection - finishLight))) + 5;
+        rightPower = (rightPower * ((minLightVal - finishLight) / (startLightDetection - finishLight))) + 5;
+    }*/ 
 
-		Set_Motor_Speed(0, leftPower);
-		Set_Motor_Speed(1, rightPower);
+		Set_Motor_Speed(LEFT_MOTOR_INDEX, leftPower);
+		Set_Motor_Speed(RIGHT_MOTOR_INDEX, rightPower);
     lastError = error;
 }
 
 void update() {
+	__WFI();
+	
 	if(HM10NewDataAvailable){
 		HM10_SendCommand(NextCommand);
+		
 		if (strcmp(NextCommand, "STATUS\r\n") == 0) {
 				sendStatus();
+			
+				if (strcmp(currentMode, "AUTO") == 0)
+					sendAutonomousStatus(leftPower, rightPower);
 		} else if (strcmp(NextCommand, "FORWARD\r\n")  == 0){
 				strcpy(currentState, "FORWARD");
 		} else if (strcmp(NextCommand, "BACK\r\n")  == 0){
@@ -145,7 +156,7 @@ void update() {
 		} else if (strcmp(NextCommand, "LEFT\r\n")  == 0){
 				strcpy(currentState, "LEFT");
 		} else if (strcmp(NextCommand, "RIGHT\r\n")  == 0){
-				strcpy(currentState, "BACK");
+				strcpy(currentState, "RIGHT");
 		}else if (strcmp(NextCommand, "TEST\r\n")  == 0){
 				HM10_SendCommand("TESTING\r\n");
 				strcpy(currentMode, "TEST");
@@ -154,7 +165,12 @@ void update() {
 				HM10_SendCommand("AUTONOMOUS\r\n");
         strcpy(currentMode, "AUTO");
         strcpy(currentState, "IDLE");
+		}else if (strcmp(NextCommand, "START\r\n")  == 0){
+        strcpy(currentState, "START");
 		}
+		
+		memset(NextCommand, 0, HM10BufferSize);
+		HM10NewDataAvailable = 0;
 	}
 	
 	if(strcmp(currentMode, "TEST") == 0){
@@ -162,18 +178,18 @@ void update() {
     uint32_t rightLDRValue = getRightLDR();
 		
 		float potentVal = getPotentiometer();
-		if(potentVal < 0.1) potentVal = 0;
-		else if(potentVal > 0.9) potentVal = 1;
+		if (potentVal < 0.1) potentVal = 0;
+		else if (potentVal > 0.9) potentVal = 1;
 		
-		if((leftLDRValue + rightLDRValue) / 2 < finishLight){
-			Set_Motor_Speed(0, 0);
-			Set_Motor_Speed(1, 0);
-			turnOffLED();
+		if((leftLDRValue + rightLDRValue) / 2 > finishLight){
+			Set_Motor_Speed(LEFT_MOTOR_INDEX, 0);
+			Set_Motor_Speed(RIGHT_MOTOR_INDEX, 0);
 			
-		} else if(strcmp(currentState, "LEFT") == 0){
+			turnOffLED();
+		} else if (strcmp(currentState, "LEFT") == 0) {
 			if(!isTurning){
 				Turn(TURN_DIR_LEFT, (int)(80 * potentVal));
-				rightLED();
+				leftLED();
 				isTurning = 1;
 			}
 			if(isTurnComplete){
@@ -195,36 +211,35 @@ void update() {
 		} else if(strcmp(currentState, "FORWARD") == 0){
       Set_Motor_Speed(0, (int)(90 * potentVal));
 			Set_Motor_Speed(1, (int)(90 * potentVal));
+			
 			frontLED();
 		} else if(strcmp(currentState, "BACK") == 0){
 			Set_Motor_Speed(0, (int)(-90 * potentVal));
 			Set_Motor_Speed(1, (int)(-90 * potentVal));
+			
 			backLED();
 		} else if(strcmp(currentState, "IDLE") == 0){
       Set_Motor_Speed(0, 0);
 			Set_Motor_Speed(1, 0);
+			
 			turnOffLED();
 		}
-		
 	} else if(strcmp(currentMode, "AUTO") == 0){
 			if(strcmp(currentState, "START") == 0){
 					frontLED();
-					moveAutonomous(80);
+					moveAutonomous(40);
 			} else if(strcmp(currentState, "IDLE") == 0){
 					turnOffLED();
-					Set_Motor_Speed(0, 0);
-					Set_Motor_Speed(1, 0);
+				
+					Set_Motor_Speed(LEFT_MOTOR_INDEX, 0);
+					Set_Motor_Speed(RIGHT_MOTOR_INDEX, 0);
       }
   }
-	
-	memset(NextCommand, 0, HM10BufferSize);
-	HM10NewDataAvailable = 0;
-	wait(50);
 }
 
 int main() {
 	init();
-	
+
 	while(1) {
 		update();
 	}

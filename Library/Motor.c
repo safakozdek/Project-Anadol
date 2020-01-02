@@ -1,8 +1,6 @@
 #include "Motor.h"
 #include "stdlib.h"
 
-#define ticksNeededToTurn 10
-
 volatile uint32_t tickCount = 0,
 									rotateUntilTick = 0;
 
@@ -45,41 +43,45 @@ void Init_Motor(uint8_t motorIndex) {
 void Init_Motor_PWM() {
 	PWM_Init(MOTOR_PWM_INDEX, MOTOR_PWM_CHANNELS, 2);
 	PWM_Cycle_Rate(MOTOR_PWM_INDEX, 20);
+	
+	Set_Motor_Speed(LEFT_MOTOR_INDEX, 0);
+	Set_Motor_Speed(RIGHT_MOTOR_INDEX, 0);
 }
 
 // speed: 0 to 100
-void Set_Motor_Speed(uint8_t motorIndex, int8_t speed) {
-	motorSpeed[motorIndex] = speed;
-	
-	PWM_Write(MOTOR_PWM_INDEX, MOTOR_PWM_CHANNELS[motorIndex], abs(speed));
-	
-	if (speed == 0)
-		Set_Motor_Direction(motorIndex, MOTOR_DIR_BRAKE);
-	else if (speed > 0)
+void Set_Motor_Speed(uint8_t motorIndex, int32_t speed) {
+	if (speed > 0)
 		Set_Motor_Direction(motorIndex, MOTOR_DIR_FORWARD);
 	else
 		Set_Motor_Direction(motorIndex, MOTOR_DIR_BACKWARD);
+	
+	speed = abs(speed);
+	
+	if (speed > 90)
+		speed = 90;
+	
+	PWM_Write(MOTOR_PWM_INDEX, MOTOR_PWM_CHANNELS[motorIndex], speed);
 }
 
 void Set_Motor_Direction(uint8_t motorIndex, uint8_t dir) {
-	motorDirection[motorIndex] = dir;
+	//motorDirection[motorIndex] = dir;
 	GPIO_PIN_Write(MOTORS_GPIO_PORTS[motorIndex][0], MOTORS_GPIO_MASKS[motorIndex][0], dir & 1);
 	GPIO_PIN_Write(MOTORS_GPIO_PORTS[motorIndex][1], MOTORS_GPIO_MASKS[motorIndex][1], (dir >> 1) & 1);
 }
 
 void Resume_Motor(uint8_t motorIndex) {
-	Set_Motor_Direction(motorIndex, motorDirection[motorIndex]);
-	Set_Motor_Speed(motorIndex, motorSpeed[motorIndex]);
+	//Set_Motor_Direction(motorIndex, motorDirection[motorIndex]);
+	//Set_Motor_Speed(motorIndex, motorSpeed[motorIndex]);
 }
 
 void Pause_Motor(uint8_t motorIndex) {
-	PWM_Write(MOTOR_PWM_INDEX, MOTOR_PWM_CHANNELS[motorIndex], 100); 
-	GPIO_PIN_Write(MOTORS_GPIO_PORTS[motorIndex][0], MOTORS_GPIO_MASKS[motorIndex][0], MOTOR_DIR_BRAKE & 1);
-	GPIO_PIN_Write(MOTORS_GPIO_PORTS[motorIndex][1], MOTORS_GPIO_MASKS[motorIndex][1], (MOTOR_DIR_BRAKE >> 1) & 1);
+//	PWM_Write(MOTOR_PWM_INDEX, MOTOR_PWM_CHANNELS[motorIndex], 100); 
+	//GPIO_PIN_Write(MOTORS_GPIO_PORTS[motorIndex][0], MOTORS_GPIO_MASKS[motorIndex][0], MOTOR_DIR_BRAKE & 1);
+//	GPIO_PIN_Write(MOTORS_GPIO_PORTS[motorIndex][1], MOTORS_GPIO_MASKS[motorIndex][1], (MOTOR_DIR_BRAKE >> 1) & 1);
 }
 
 void Turn(int8_t dir, uint8_t power) { // 1: right, -1: left
-	rotateUntilTick = getTickCount() + ticksNeededToTurn;
+	rotateUntilTick = getTickCount() + TICKS_FOR_TURN;
 	Set_Motor_Speed(LEFT_MOTOR_INDEX, power * dir);
 	Set_Motor_Speed(RIGHT_MOTOR_INDEX, -power * dir);
 }

@@ -14,6 +14,7 @@
 
 #define MOTOR1_IN1_MASK (1<<0)
 #define MOTOR1_IN2_MASK (1<<1)
+
 #define MOTOR2_IN1_MASK (1<<2)
 #define MOTOR2_IN2_MASK (1<<3)
 
@@ -23,21 +24,23 @@
 #define MOTOR_PWM_INDEX 1
 
 #define MOTOR_DIR_FORWARD 0x2
-#define MOTOR_DIR_BACKWARD 0x1
+#define MOTOR_DIR_BACKWARD  0x1 
 #define MOTOR_DIR_BRAKE 0x0
 
-#define TURN_DIR_LEFT 1
-#define TURN_DIR_RIGHT -1
+#define TURN_DIR_LEFT -1
+#define TURN_DIR_RIGHT +1
 
-#define LEFT_MOTOR_INDEX 0
-#define RIGHT_MOTOR_INDEX 1
+#define LEFT_MOTOR_INDEX 1
+#define RIGHT_MOTOR_INDEX 0
 
 #define IOCON_SPEED_SENSOR_ADDRESS	0x4002C010
 #define IOCON_SPEED_SENSOR	*((volatile uint32_t*)(IOCON_SPEED_SENSOR_ADDRESS)) //P34 - P0.4
 
+#define TICKS_FOR_TURN 6
+
 void Init_Motor(uint8_t);
 void Init_Motor_PWM(void);
-void Set_Motor_Speed(uint8_t motorIndex, int8_t speed);
+void Set_Motor_Speed(uint8_t motorIndex, int32_t speed);
 void Set_Motor_Direction(uint8_t motorIndex, uint8_t dir);
 void Resume_Motor(uint8_t motorIndex);
 void Pause_Motor(uint8_t motorIndex);
