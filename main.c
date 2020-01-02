@@ -19,9 +19,8 @@
 #define UART_WRITE_BUFFER_SIZE 512
 
 #define kP 8
-#define kD 0//0.1
-#define startLightDetection 1500
-#define finishLight 2500
+#define kD 0
+#define finishLight 1750
 
 char currentMode[15] = "TEST"; // TEST, AUTONOMUS
 char currentState[15] = "IDLE"; // IDLE, FORWARD, BACK, RIGHT, LEFT
@@ -116,20 +115,31 @@ void moveAutonomous(float baseSpeed){
     double error = frontSonar - backSonar;
     double correction = (error * kP) + ((error - lastError) * kD);
 
-	  if (backSonar > 100 || frontSonar > 100)
+	  if (frontSonar > 100){
+			rightPower = baseSpeed;
+			leftPower = 0;
+		} else if(backSonar > 100){
 			return;
+		} /*else if(backSonar < 100 && backSonar > 30){
+			return;
+		} else if(backSonar > 100){
+			return;
+		}*/ else if (frontSonar < backSonar) {
+			rightPower = (baseSpeed + (correction * 3)) < 0 ? 0 : (baseSpeed + (correction * 3));
+			leftPower = baseSpeed - correction;
+		} else if (fabs(frontSonar - backSonar) < 1) {
+			rightPower = baseSpeed;
+			leftPower = baseSpeed ;
+		} else {
+			rightPower = baseSpeed + correction * 1.5;
+			leftPower = (baseSpeed - (correction * 7)) < -5 ? -5 : (baseSpeed - (correction * 7));
+		}
 	 
-		leftPower = baseSpeed + correction;
-		rightPower = baseSpeed - correction;
-	
-		/*if(minLightVal > finishLight){
+		if(minLightVal > finishLight){
         HM10_SendCommand("FINISH");
         strcpy(currentState, "IDLE");
         return;
-    } else if(minLightVal > startLightDetection){
-       leftPower = (leftPower * ((minLightVal - finishLight) / (startLightDetection - finishLight))) + 5;
-        rightPower = (rightPower * ((minLightVal - finishLight) / (startLightDetection - finishLight))) + 5;
-    }*/ 
+    }
 
 		Set_Motor_Speed(LEFT_MOTOR_INDEX, leftPower);
 		Set_Motor_Speed(RIGHT_MOTOR_INDEX, rightPower);
@@ -227,7 +237,7 @@ void update() {
 	} else if(strcmp(currentMode, "AUTO") == 0){
 			if(strcmp(currentState, "START") == 0){
 					frontLED();
-					moveAutonomous(40);
+					moveAutonomous(85);
 			} else if(strcmp(currentState, "IDLE") == 0){
 					turnOffLED();
 				

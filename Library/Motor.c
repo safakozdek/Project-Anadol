@@ -57,8 +57,8 @@ void Set_Motor_Speed(uint8_t motorIndex, int32_t speed) {
 	
 	speed = abs(speed);
 	
-	if (speed > 90)
-		speed = 90;
+	if (speed > 95)
+		speed = 95;
 	
 	PWM_Write(MOTOR_PWM_INDEX, MOTOR_PWM_CHANNELS[motorIndex], speed);
 }

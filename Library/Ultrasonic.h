@@ -16,8 +16,8 @@
 #define IOCON_ECHO_2_ADDRESS	0x4002C05C
 #define IOCON_ECHO_2	*((volatile uint32_t*)(IOCON_ECHO_2_ADDRESS))
 
-#define BACK_ULTRASONIC_INDEX 0
-#define FRONT_ULTRASONIC_INDEX 1
+#define BACK_ULTRASONIC_INDEX 1
+#define FRONT_ULTRASONIC_INDEX 0
 
 extern uint32_t ultrasonicSensorsDurations[2];
 extern uint8_t ultrasonicSensorsNewDataAvailable[2];
