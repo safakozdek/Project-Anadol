@@ -18,7 +18,7 @@
 #define UART_READ_BUFFER_SIZE 512
 #define UART_WRITE_BUFFER_SIZE 512
 
-#define kP 7
+#define kP 6
 #define kD 0
 #define finishLight 1750
 
@@ -112,28 +112,33 @@ void moveAutonomous(float baseSpeed){
     float frontSonar = getFrontUltrasonic();
 	
     double error = frontSonar - backSonar;
-    double correction = (error * kP) + ((error - lastError) * kD);
+		double errorDiff = error - lastError;
+	
+    double correction = (error * kP) + (errorDiff * kD);
 
-	  if (frontSonar > 100){
+	  if (frontSonar > 60 || backSonar > 60 ){
+			if(frontSonar < backSonar){
+				rightPower = 5;
+				leftPower = baseSpeed;
+			} else {
+				rightPower = baseSpeed;
+				leftPower = 10;
+			}
+		} else if(backSonar > 36 && frontSonar > 36){
 			rightPower = baseSpeed;
-			leftPower = 0;
-		} else if(backSonar > 100){
-			return;
-		} else if(backSonar > 32 && frontSonar > 32){
-			rightPower = baseSpeed;
-			leftPower = -3;
-		} else if(backSonar < 18 && frontSonar < 18){
-			rightPower = 0;
+			leftPower = 10;
+		} else if(backSonar < 16 && frontSonar < 16){
+			rightPower = 10;
 			leftPower = baseSpeed;
-		} else if (frontSonar < backSonar) {
-			rightPower = (baseSpeed + (correction * 3)) < 0 ? 0 : (baseSpeed + (correction * 3));
+		} else if (frontSonar < backSonar && fabs(frontSonar - backSonar) > 0.5) {
+			rightPower = (baseSpeed + (correction * 4)) < 5 ? 5 : (baseSpeed + (correction * 4));
 			leftPower = baseSpeed - correction;
-		} else if (fabs(frontSonar - backSonar) < 1.5) {
+		} else if (fabs(frontSonar - backSonar) < 1) {
 			rightPower = baseSpeed;
-			leftPower = baseSpeed ;
-		} else {
+			leftPower = baseSpeed;
+		} else if(backSonar < frontSonar){
 			rightPower = baseSpeed + correction;
-			leftPower = (baseSpeed - (correction * 5)) < -5 ? -5 : (baseSpeed - (correction * 5));
+			leftPower = (baseSpeed - (correction * 5)) < 10 ? 10 : (baseSpeed - (correction * 5));
 		}
 	 
 		if(minLightVal > finishLight){
@@ -149,14 +154,13 @@ void moveAutonomous(float baseSpeed){
 
 void update() {
 	__WFI();
-	
+
 	if(HM10NewDataAvailable){
 		HM10_SendCommand(NextCommand);
 		
 		if (strcmp(NextCommand, "STATUS\r\n") == 0) {
 				sendStatus();
-			
-				if (strcmp(currentMode, "AUTO") == 0)
+		if (strcmp(currentMode, "AUTO") == 0)
 					sendAutonomousStatus(leftPower, rightPower);
 		} else if (strcmp(NextCommand, "FORWARD\r\n")  == 0){
 				strcpy(currentState, "FORWARD");
@@ -164,10 +168,14 @@ void update() {
 				strcpy(currentState, "BACK");
 		} else if (strcmp(NextCommand, "STOP\r\n")  == 0){
 				strcpy(currentState, "IDLE");
+				isTurning = 0;
+				isTurnComplete = 0;
 		} else if (strcmp(NextCommand, "LEFT\r\n")  == 0){
 				strcpy(currentState, "LEFT");
+				leftLED();
 		} else if (strcmp(NextCommand, "RIGHT\r\n")  == 0){
 				strcpy(currentState, "RIGHT");
+				rightLED();
 		}else if (strcmp(NextCommand, "TEST\r\n")  == 0){
 				HM10_SendCommand("TESTING\r\n");
 				strcpy(currentMode, "TEST");
@@ -200,8 +208,8 @@ void update() {
 			turnOffLED();
 		} else if (strcmp(currentState, "LEFT") == 0) {
 			if(!isTurning){
-				Turn(TURN_DIR_LEFT, (int)(80 * potentVal));
-				leftLED();
+				Turn(TURN_DIR_LEFT, (int)(30 * potentVal));
+			
 				isTurning = 1;
 			}
 			if(isTurnComplete){
@@ -211,8 +219,8 @@ void update() {
 			}
     } else if(strcmp(currentState, "RIGHT") == 0){
 			if(!isTurning){
-				Turn(TURN_DIR_RIGHT, (int)(80 * potentVal));
-				rightLED();
+				Turn(TURN_DIR_RIGHT, (int)(30 * potentVal));
+			
 				isTurning = 1;
 			}
 			if(isTurnComplete){
@@ -239,7 +247,7 @@ void update() {
 	} else if(strcmp(currentMode, "AUTO") == 0){
 			if(strcmp(currentState, "START") == 0){
 					frontLED();
-					moveAutonomous(90);
+					moveAutonomous(95);
 			} else if(strcmp(currentState, "IDLE") == 0){
 					turnOffLED();
 					Set_Motor_Speed(LEFT_MOTOR_INDEX, 0);

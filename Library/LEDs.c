@@ -44,7 +44,7 @@ void backLED(){
 
 void leftLED(){
   //LEDs at left blink twice a second, others off.
-	PWM_Cycle_Rate(LED_PWM_INDEX, 500);
+	PWM_Cycle_Rate(LED_PWM_INDEX, 250);
 	
 	PWM_Write(LED_PWM_INDEX, FRONT_LEFT_LED, 50);
 	PWM_Write(LED_PWM_INDEX, FRONT_RIGHT_LED, 0);
@@ -54,7 +54,7 @@ void leftLED(){
 
 void rightLED(){
   //LEDs at right blink twice a second, others off.
-	PWM_Cycle_Rate(LED_PWM_INDEX, 500);
+	PWM_Cycle_Rate(LED_PWM_INDEX, 250);
 	
 	PWM_Write(LED_PWM_INDEX, FRONT_LEFT_LED, 0);
 	PWM_Write(LED_PWM_INDEX, FRONT_RIGHT_LED, 50);

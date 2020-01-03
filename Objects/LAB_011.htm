@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\LAB_011.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\LAB_011.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Jan 03 00:30:11 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Jan 03 13:46:38 2020
 <BR><P>
 <H3>Maximum Stack Usage =        696 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -408,13 +408,14 @@ Global Symbols
 
 <P><STRONG><a name="[96]"></a>__aeabi_cdcmpeq</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, cdcmple.o(.text), UNUSED)
 
-<P><STRONG><a name="[81]"></a>__aeabi_cdcmple</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, cdcmple.o(.text))
+<P><STRONG><a name="[82]"></a>__aeabi_cdcmple</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, cdcmple.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update
 <LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;moveAutonomous
 </UL>
 
 <P><STRONG><a name="[6a]"></a>__aeabi_cdrcmple</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, cdrcmple.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update
+<LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;moveAutonomous
 <LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_fp_digits
 </UL>
 
@@ -598,7 +599,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Init_Motor
 </UL>
 
-<P><STRONG><a name="[58]"></a>PWM_Cycle_Rate</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, pwm.o(i.PWM_Cycle_Rate))
+<P><STRONG><a name="[58]"></a>PWM_Cycle_Rate</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, pwm.o(i.PWM_Cycle_Rate))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = PWM_Cycle_Rate
 </UL>
 <BR>[Called By]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rightLED
@@ -608,7 +609,7 @@ Global Symbols
 <LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Init_Motor_PWM
 </UL>
 
-<P><STRONG><a name="[51]"></a>PWM_Init</STRONG> (Thumb, 122 bytes, Stack size 28 bytes, pwm.o(i.PWM_Init))
+<P><STRONG><a name="[51]"></a>PWM_Init</STRONG> (Thumb, 118 bytes, Stack size 28 bytes, pwm.o(i.PWM_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = PWM_Init &rArr; PWM_Write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PWM_Write
@@ -751,7 +752,7 @@ Global Symbols
 
 <P><STRONG><a name="[9f]"></a>sprintf</STRONG> (Thumb, 0 bytes, Stack size 24 bytes, printfa.o(i.__0sprintf), UNUSED)
 
-<P><STRONG><a name="[82]"></a>__hardfp_fabs</STRONG> (Thumb, 20 bytes, Stack size 8 bytes, fabs.o(i.__hardfp_fabs))
+<P><STRONG><a name="[81]"></a>__hardfp_fabs</STRONG> (Thumb, 20 bytes, Stack size 8 bytes, fabs.o(i.__hardfp_fabs))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = __hardfp_fabs
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;moveAutonomous
@@ -859,7 +860,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[32]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[7d]"></a>leftLED</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, leds.o(i.leftLED))
+<P><STRONG><a name="[7d]"></a>leftLED</STRONG> (Thumb, 52 bytes, Stack size 8 bytes, leds.o(i.leftLED))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = leftLED &rArr; PWM_Write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PWM_Write
@@ -876,15 +877,16 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> entry9a.o(.ARM.Collect$$$$0000000B)
 </UL>
-<P><STRONG><a name="[7f]"></a>moveAutonomous</STRONG> (Thumb, 758 bytes, Stack size 80 bytes, main.o(i.moveAutonomous))
-<BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = moveAutonomous &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
+<P><STRONG><a name="[7f]"></a>moveAutonomous</STRONG> (Thumb, 862 bytes, Stack size 88 bytes, main.o(i.moveAutonomous))
+<BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = moveAutonomous &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[3c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 <LI><a href="#[48]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
-<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
+<LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdrcmple
+<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
 <LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_Motor_Speed
 <LI><a href="#[44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HM10_SendCommand
 <LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getRightLDR
@@ -892,12 +894,12 @@ Global Symbols
 <LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getFrontUltrasonic
 <LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getBackUltrasonic
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strcpy
-<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_fabs
+<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_fabs
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update
 </UL>
 
-<P><STRONG><a name="[84]"></a>rightLED</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, leds.o(i.rightLED))
+<P><STRONG><a name="[84]"></a>rightLED</STRONG> (Thumb, 52 bytes, Stack size 8 bytes, leds.o(i.rightLED))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = rightLED &rArr; PWM_Write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PWM_Write
@@ -941,7 +943,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update
 </UL>
 
-<P><STRONG><a name="[7e]"></a>update</STRONG> (Thumb, 802 bytes, Stack size 32 bytes, main.o(i.update))
+<P><STRONG><a name="[7e]"></a>update</STRONG> (Thumb, 810 bytes, Stack size 32 bytes, main.o(i.update))
 <BR><BR>[Stack]<UL><LI>Max Depth = 696<LI>Call Chain = update &rArr; sendStatus &rArr; getPotentiometer &rArr; __aeabi_ui2d &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;turnOffLED
@@ -951,7 +953,7 @@ Global Symbols
 <LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;backLED
 <LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdrcmple
-<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
+<LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
 <LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Turn
 <LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_Motor_Speed
 <LI><a href="#[44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HM10_SendCommand

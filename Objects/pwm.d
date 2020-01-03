@@ -9,3 +9,4 @@
 .\objects\pwm.o: C:\Users\Bartu\AppData\Local\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Core\Include\mpu_armv7.h
 .\objects\pwm.o: C:\Users\Bartu\AppData\Local\Arm\Packs\Keil\LPC4000_DFP\2.1.0\Device\Include\system_LPC407x_8x_177x_8x.h
 .\objects\pwm.o: Library\SystemStructures.h
+.\objects\pwm.o: Library\wait.h

@@ -1,4 +1,5 @@
 #include "PWM.h"
+#include "wait.h"
 
 PWM_TypeDef* const PWMs[] = {PWM0, PWM1};
 
@@ -19,7 +20,7 @@ void PWM_Init(const uint8_t pwmIndex, const uint8_t channels[], const uint8_t n_
 	
 	PWMX->TCR = 1 << 1;
 	
-	PWMX->PR = 9; 
+	//PWMX->PR = 9; 
 	
 	//Configure MR0 register for a period of 20 ms
 	PWMX->MR0_3[0] = 1200000;
@@ -40,7 +41,8 @@ void PWM_Cycle_Rate(uint8_t pwmIndex, uint32_t period) {
 	
 	PWMX->MR0_3[0] = (PERIPHERAL_CLOCK_FREQUENCY / (PWMX->PR + 1) / 1000) * period;
 
-	PWMX->LER |= 1 << 0;
+	PWMX->LER = (1 << 8) - 1;
+	//wait(10);
 }
 
 void PWM_Write(uint8_t pwmIndex, uint8_t channelIndex, uint32_t T_ON) {	
@@ -53,4 +55,5 @@ void PWM_Write(uint8_t pwmIndex, uint8_t channelIndex, uint32_t T_ON) {
 	
 	*pMR = (T_ON * PWMX->MR0_3[0]) / 100;
 	PWMX->LER = (1 << 8) - 1;
+	//wait(10);
 }
