@@ -19,15 +19,22 @@
 #define UART_WRITE_BUFFER_SIZE 512
 
 #define kP 6
-#define kD 0
-#define finishLight 1750
+#define kD 1.5
+#define finishLight 1550
 
 char currentMode[15] = "TEST"; // TEST, AUTONOMUS
 char currentState[15] = "IDLE"; // IDLE, FORWARD, BACK, RIGHT, LEFT
-double lastError = 0;
 uint8_t isTurning = 0;
+
 float leftPower=0;
 float rightPower=0;
+
+uint8_t closeCount = 0;
+uint8_t farCount = 0;
+
+double lastError = 0;
+double lastFront = 0;
+double lastBack = 0;
 
 char uartReadBuffer[UART_READ_BUFFER_SIZE] = "";
 char uartWriteBuffer[UART_WRITE_BUFFER_SIZE] = "";
@@ -75,27 +82,22 @@ float getPotentiometer(){
 void sendStatus() {
 	char distStrBuf[512] = "";
 	
-	sprintf(distStrBuf, "{\"front_dist\": %f, \"back_dist\": %f, \"light_left\": %d, \"light_right\": %d, \"pot\": %f }\r\n",
-				  ultrasonicSensorsDurations[0] / 58.0,
-					ultrasonicSensorsDurations[1] / 58.0,
+	sprintf(distStrBuf, "{\"front_distance\": %d, \"back_distance\": %d, \"light_level_left\": %d, \"light_level_right\": %d, \"op_mode\": \"%s\" }\r\n",
+				  (int)(ultrasonicSensorsDurations[0] / 58.0),
+					(int)(ultrasonicSensorsDurations[1] / 58.0),
 				  getLeftLDR(),
 					getRightLDR(),
-					getPotentiometer());
+					strcmp(currentMode, "TEST") == 0 ? "TEST" : "AUTO");
 	
 	HM10_SendCommand(distStrBuf);
 }
 
 void sendAutonomousStatus(float leftPower, float rightPower) {
-	char distStrBuf[512] = "";
-	
-	sprintf(distStrBuf, "{\"left_power\": %f, \"right_power\": %f }\r\n",
-				  leftPower,
-					rightPower);
-	
-	HM10_SendCommand(distStrBuf);
+	return;
 }
 
 float getBackUltrasonic(){
+	
 	return (ultrasonicSensorsDurations[BACK_ULTRASONIC_INDEX] / 58.0);
 }
 
@@ -112,37 +114,56 @@ void moveAutonomous(float baseSpeed){
     float frontSonar = getFrontUltrasonic();
 	
     double error = frontSonar - backSonar;
-		double errorDiff = error - lastError;
-	
-    double correction = (error * kP) + (errorDiff * kD);
+    double correction = (error * kP) + ((error - lastError) * kD);
 
-	  if (frontSonar > 60 || backSonar > 60 ){
-			if(frontSonar < backSonar){
-				rightPower = 5;
-				leftPower = baseSpeed;
-			} else {
-				rightPower = baseSpeed;
-				leftPower = 10;
+	  if (frontSonar > 80 || backSonar > 80 ){
+			if(frontSonar - lastFront > 0 || backSonar - lastBack > 0){
+				farCount++;
+				if(farCount > 5){
+					rightPower = baseSpeed/2;
+					leftPower = 0;
+				}
+			} else if(frontSonar - lastFront < 0 || backSonar - lastBack < 0){
+				closeCount++;
+				if(closeCount > 5){
+					leftPower = baseSpeed/2;
+					rightPower = 0;
+				}
 			}
-		} else if(backSonar > 36 && frontSonar > 36){
-			rightPower = baseSpeed;
-			leftPower = 10;
-		} else if(backSonar < 16 && frontSonar < 16){
-			rightPower = 10;
-			leftPower = baseSpeed;
-		} else if (frontSonar < backSonar && fabs(frontSonar - backSonar) > 0.5) {
-			rightPower = (baseSpeed + (correction * 4)) < 5 ? 5 : (baseSpeed + (correction * 4));
-			leftPower = baseSpeed - correction;
-		} else if (fabs(frontSonar - backSonar) < 1) {
-			rightPower = baseSpeed;
-			leftPower = baseSpeed;
-		} else if(backSonar < frontSonar){
-			rightPower = baseSpeed + correction;
-			leftPower = (baseSpeed - (correction * 5)) < 10 ? 10 : (baseSpeed - (correction * 5));
+		} else{
+			farCount = 0;
+			closeCount = 0;
+			
+				if(backSonar > 31 && frontSonar > 31){
+					if(frontSonar < backSonar){
+						rightPower = baseSpeed / 3;
+						leftPower = baseSpeed /2;
+					} else {
+						rightPower = 3 * baseSpeed / 4;
+						leftPower = 0;
+					}
+				} else if(backSonar < 16 || frontSonar < 16){
+					if(frontSonar <= backSonar){
+						rightPower = 0;
+						leftPower = baseSpeed;
+					} else {
+						rightPower = 3 * baseSpeed /4;
+						leftPower = baseSpeed / 3;
+					}
+				} else if (frontSonar < backSonar && fabs(frontSonar - backSonar) > 0.75) {
+					rightPower = (baseSpeed + (correction * 4)) < 0 ? 0 : (baseSpeed + (correction * 4));
+					leftPower = baseSpeed - correction;
+				} else if (fabs(frontSonar - backSonar) < 1.25) {
+					rightPower = baseSpeed;
+					leftPower = baseSpeed;
+				} else if(backSonar < frontSonar){
+					rightPower = baseSpeed + correction;
+					leftPower = (baseSpeed - (correction * 5)) < -2 ? -2 : (baseSpeed - (correction * 5));
+				}
 		}
 	 
 		if(minLightVal > finishLight){
-        HM10_SendCommand("FINISH");
+        HM10_SendCommand("FINISH\r\n");
         strcpy(currentState, "IDLE");
         return;
     }
@@ -150,6 +171,9 @@ void moveAutonomous(float baseSpeed){
 		Set_Motor_Speed(LEFT_MOTOR_INDEX, leftPower);
 		Set_Motor_Speed(RIGHT_MOTOR_INDEX, rightPower);
     lastError = error;
+		lastFront = frontSonar;
+		lastBack = backSonar;
+		wait(60);
 }
 
 void update() {
@@ -208,8 +232,7 @@ void update() {
 			turnOffLED();
 		} else if (strcmp(currentState, "LEFT") == 0) {
 			if(!isTurning){
-				Turn(TURN_DIR_LEFT, (int)(30 * potentVal));
-			
+				Turn(TURN_DIR_LEFT, (int)(80));
 				isTurning = 1;
 			}
 			if(isTurnComplete){
@@ -219,8 +242,7 @@ void update() {
 			}
     } else if(strcmp(currentState, "RIGHT") == 0){
 			if(!isTurning){
-				Turn(TURN_DIR_RIGHT, (int)(30 * potentVal));
-			
+				Turn(TURN_DIR_RIGHT, (int)(80));
 				isTurning = 1;
 			}
 			if(isTurnComplete){
@@ -241,13 +263,12 @@ void update() {
 		} else if(strcmp(currentState, "IDLE") == 0){
       Set_Motor_Speed(0, 0);
 			Set_Motor_Speed(1, 0);
-			
 			turnOffLED();
 		}
 	} else if(strcmp(currentMode, "AUTO") == 0){
 			if(strcmp(currentState, "START") == 0){
 					frontLED();
-					moveAutonomous(95);
+					moveAutonomous(80);
 			} else if(strcmp(currentState, "IDLE") == 0){
 					turnOffLED();
 					Set_Motor_Speed(LEFT_MOTOR_INDEX, 0);
